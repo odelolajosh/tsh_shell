@@ -1,0 +1,15 @@
+{
+  "files.associations": {
+    "stdlib.h": "c",
+    "_null.h": "c",
+    "_wchar_t.h": "c",
+    "_rune_t.h": "c",
+    "_ct_rune_t.h": "c",
+    "tsh.h": "c",
+    "string.h": "c",
+    "parser.h": "c",
+    "unistd.h": "c",
+    "_string.h": "c",
+    "strings.h": "c"
+  }
+}
