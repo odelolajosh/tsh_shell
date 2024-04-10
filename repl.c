@@ -44,6 +44,9 @@ void tsh_repl(tsh_t *tsh)
     while (current_line != NULL)
     {
       command = parse_command(current_line->line);
+      if (command == NULL)
+        break;
+
       status = tsh_execute(tsh, command);
 
       free_command(command);

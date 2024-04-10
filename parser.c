@@ -43,7 +43,6 @@ void parse_line(line_node **lines, sep_node **seps, char *line)
   free(token);
 }
 
-
 /**
  * parse_command - Parses a command string into a command_t struct.
  * Parses str into a freshly allocated cmd_struct and returns a pointer to it.
@@ -64,6 +63,11 @@ command_t *parse_command(char *line)
   }
 
   command->argv = tsh_split_line(line);
+  if (command->argv == NULL)
+  {
+    free(command);
+    return (NULL);
+  }
   command->name = _strdup(command->argv[0]);
   command->redirects[0] = command->redirects[1] = -1;
 
@@ -126,7 +130,7 @@ pipeline_t *parse_pipeline(char *cmd)
 int (*assign_pipes(pipeline_t *pipeline))[2]
 {
   int n_pipes = pipeline->len - 1, i;
-  int (*pipes)[2] = malloc(sizeof(int) * n_pipes * 2);
+  int(*pipes)[2] = malloc(sizeof(int) * n_pipes * 2);
 
   if (pipes == NULL)
   {
@@ -134,7 +138,8 @@ int (*assign_pipes(pipeline_t *pipeline))[2]
     exit(EXIT_FAILURE);
   }
 
-  for (i = 1; i < pipeline->len; i++) {
+  for (i = 1; i < pipeline->len; i++)
+  {
     pipe(pipes[i - 1]);
     pipeline->commands[i - 1]->redirects[STDOUT_FILENO] = pipes[i - 1][1];
     pipeline->commands[i]->redirects[STDIN_FILENO] = pipes[i - 1][0];
@@ -145,17 +150,25 @@ int (*assign_pipes(pipeline_t *pipeline))[2]
 
 void print_command(command_t *command)
 {
-  char** arg = command->argv;
-  int i = 0;
+  char **arg;
+  int i;
 
+  if (command == NULL)
+  {
+    fprintf(stderr, "command is NULL\n");
+    return;
+  }
+
+  arg = command->argv;
   fprintf(stderr, "progname: %s\n", command->name);
 
-  for (i = 0, arg = command->argv; *arg; ++arg, ++i) {
+  for (i = 0, arg = command->argv; *arg; ++arg, ++i)
+  {
     fprintf(stderr, "  args[%d]: %s\n", i, *arg);
   }
 }
 
-void print_pipeline(pipeline_t *pipeline) { }
+void print_pipeline(pipeline_t *pipeline) {}
 
 char *tsh_read_line(void)
 {
@@ -165,37 +178,37 @@ char *tsh_read_line(void)
 char **tsh_split_line(char *line)
 {
   char **argv;
-	char *token;
-	size_t bufsize, i;
+  char *token;
+  size_t bufsize, i;
 
-	bufsize = TSH_TOK_BUFSIZE;
-	argv = malloc(sizeof(char *) * (bufsize));
-	if (!argv)
-		return (NULL);
+  bufsize = TSH_TOK_BUFSIZE;
+  argv = malloc(sizeof(char *) * (bufsize));
+  if (!argv)
+    return (NULL);
 
-	token = strtok(line, TSH_TOK_DELIM);
-	if (!token)
-	{
-		free(argv);
-		return (NULL);
-	}
+  token = strtok(line, TSH_TOK_DELIM);
+  if (!token)
+  {
+    free(argv);
+    return (NULL);
+  }
 
-	for (i = 0; token; i++)
-	{
-		if (i == bufsize)
-		{
-			bufsize += TSH_TOK_BUFSIZE;
-			argv = _realloc2(argv, sizeof(char *) * i, sizeof(char *) * bufsize);
-			if (argv == NULL)
-			{
-				write(STDERR_FILENO, ": allocation error\n", 18);
-				exit(EXIT_FAILURE);
-			}
-		}
-		argv[i] = _strdup(token);
-		token = strtok(NULL, TSH_TOK_DELIM);
-	}
+  for (i = 0; token; i++)
+  {
+    if (i == bufsize)
+    {
+      bufsize += TSH_TOK_BUFSIZE;
+      argv = _realloc2(argv, sizeof(char *) * i, sizeof(char *) * bufsize);
+      if (argv == NULL)
+      {
+        write(STDERR_FILENO, ": allocation error\n", 18);
+        exit(EXIT_FAILURE);
+      }
+    }
+    argv[i] = _strdup(token);
+    token = strtok(NULL, TSH_TOK_DELIM);
+  }
   argv[i] = NULL;
 
-	return (argv);
+  return (argv);
 }
