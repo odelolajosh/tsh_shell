@@ -28,6 +28,25 @@ char *_getcwd(void)
 }
 
 /**
+ * _getcwdname - gets the current working directory name
+ * 
+ * Return: the current working directory name. NULL if failed.
+ * This function is a wrapper for getcwd(3) that allocates
+ * memory for the buffer. This memory must be freed by the caller.
+ */
+char *_getcwdname(void)
+{
+  char *name, *cwd = _getcwd();
+  char *cwdname = _strrchr(cwd, '/');
+  if (cwdname == NULL)
+    return cwd;
+  
+  name = _strdup(cwdname);
+  free(cwd);
+  return name;
+}
+
+/**
  * tsh_cd - changes the current working directory
  *
  * @tsh: shell data

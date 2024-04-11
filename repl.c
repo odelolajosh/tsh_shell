@@ -13,7 +13,7 @@
  */
 size_t prompt(char **line, size_t *len)
 {
-  char *cwd = _getcwd(), prompt_str[] = "> ";
+  char *cwd = _getcwdname(), prompt_str[] = "> ";
 
   write(STDOUT_FILENO, cwd, _strlen(cwd));
   write(STDOUT_FILENO, prompt_str, 2);
