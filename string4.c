@@ -1,4 +1,5 @@
 #include "strings.h"
+#include <stdio.h>
 
 /**
  * _strtok - tokenizes a string
@@ -10,48 +11,97 @@
 char *_strtok(char *str, const char *delim)
 {
 	static char *last;
-	int i, j;
+	char *token;
 
 	if (str == NULL)
 		str = last;
 
-	for (i = 0; str[i] != '\0'; i++)
+	/* skip leading delimiters */
+	while (*str && _strchr((char *)delim, *str))
+		str++;
+
+	if (*str == '\0')
 	{
-		for (j = 0; delim[j] != '\0'; j++)
-		{
-			if (str[i] == delim[j])
-			{
-				str[i] = '\0';
-				last = str + i + 1;
-				return str;
-			}
-		}
+		last = str;
+		return (NULL);
 	}
 
-	last = str + i;
-	return str;
+	token = str;
+	/* find the end of the token */
+	str = _strpbrk(token, delim);
+	if (str == NULL)
+		last = _strrchr(token, '\0');
+	else
+	{
+		*str = '\0';
+		last = str + 1;
+	}
+
+	return (token);
 }
 
 /**
- * _strchr - locates the last occurrence of a character in a string
+ * _strrchr - locates the last occurrence of a character in a string
  * @s: string to search
  * @c: character to locate
- * 
+ *
  * Return: pointer to the last occurrence of the character
  */
 char *_strrchr(char *s, char c)
 {
-  char *last = NULL;
+	char *last = NULL;
 
-  while (*s)
-  {
-    if (*s == c)
-      last = s;
-    s++;
-  }
+	while (*s)
+	{
+		if (*s == c)
+			last = s;
+		s++;
+	}
 
-  if (c == '\0')
-    return (s);
+	if (c == '\0')
+		return (s);
 
-  return (last);
+	return (last);
+}
+
+/**
+ * _strchr - locates the first occurrence of a character in a string
+ * @s: string to search
+ * @c: character to locate
+ *
+ * Return: pointer to the first occurrence of the character
+ */
+char *_strchr(char *s, char c)
+{
+	while (*s)
+	{
+		if (*s == c)
+			return (s);
+		s++;
+	}
+
+	return (NULL);
+}
+
+/**
+ * _strpbrk - locates the first occurrence in a string of any character in a set
+ * @s: string to search
+ * @accept: set of characters to search for
+ *
+ * Return: pointer to the first occurrence of a character in accept
+ */
+char *_strpbrk(const char *s, const char *accept)
+{
+	char *a;
+	while (*s)
+	{
+		a = (char *)accept;
+		while (*a)
+			if (*a++ == *s)
+				return ((char *)s);
+
+		++s;
+	}
+
+	return (NULL);
 }

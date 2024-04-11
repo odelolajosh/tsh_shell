@@ -12,7 +12,6 @@ int _strcmp(const char *s1, const char *s2);
 int _strncmp(const char *s1, const char *s2, size_t n);
 char *_strcpy(char *dest, char *src);
 int _atoi(char *s);
-int _intlen(int n);
 char *_itoa(int);
 
 int _isdigit(char *str);
@@ -22,6 +21,8 @@ char *_strtrim(char *str);
 
 char *_strtok(char *str, const char *delim);
 char *_strrchr(char *s, char c);
+char *_strchr(char *s, char c);
+char *_strpbrk(const char *s, const char *accept);
 
 void *_memcpy(void *dest, const void *src, size_t n);
 int _memmove(char *dest, char *src, unsigned int n);
