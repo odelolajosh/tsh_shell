@@ -186,7 +186,7 @@ char **tsh_split_line(char *line)
   if (!argv)
     return (NULL);
 
-  token = strtok(line, TSH_TOK_DELIM);
+  token = _strtok(line, TSH_TOK_DELIM);
   if (!token)
   {
     free(argv);
@@ -206,7 +206,7 @@ char **tsh_split_line(char *line)
       }
     }
     argv[i] = _strdup(token);
-    token = strtok(NULL, TSH_TOK_DELIM);
+    token = _strtok(NULL, TSH_TOK_DELIM);
   }
   argv[i] = NULL;
 
