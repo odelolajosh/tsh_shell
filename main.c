@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv)
 {
+  (void)argc;
   tsh_t tsh;
 
   // Load config files, if any

@@ -60,7 +60,6 @@ int tsh_setenv(tsh_t *tsh, command_t *command)
 int tsh_unsetenv(tsh_t *tsh, command_t *command)
 {
   char **new_environ;
-  unsigned int i;
 
   if (command->argc != 2)
   {

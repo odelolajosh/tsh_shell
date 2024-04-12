@@ -30,7 +30,7 @@ int _putfd(char c, int fd)
 
 int _putsfd(char *str, int fd)
 {
-	int i;
+	int i = 0;
 
 	while (*str)
 		i += _putfd(*str++, fd);

@@ -68,4 +68,6 @@ int (*assign_pipes(pipeline_t *pipeline))[2]
   return pipes;
 }
 
-void print_pipeline(pipeline_t *pipeline) {}
+void print_pipeline(pipeline_t *pipeline) {
+  (void) pipeline;
+}

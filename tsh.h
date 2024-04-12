@@ -27,8 +27,9 @@
  * @name: name of the executable
  * @argv: arguments to pass to the executable
  * @redirects: IO redirections; redirect[i] should be used as fd i in the child.
-*/
-typedef struct command {
+ */
+typedef struct command
+{
   /** The name of the executable. */
   char *name;
 
@@ -50,7 +51,8 @@ typedef struct command {
  * @len: total number of commands
  * @commands: the commands themselves
  */
-typedef struct pipeline {
+typedef struct pipeline
+{
   /** The total number of commands. */
   int len;
 
@@ -69,14 +71,15 @@ typedef struct pipeline {
  * @pid: pid
  * @exitcode: exit code
  */
-typedef struct tsh {
-	char *line;
-	size_t line_size;
+typedef struct tsh
+{
+  char *line;
+  size_t line_size;
   char sep;
-	char **environ;
-	char *name;
-	char *pid;
-	int exitcode;
+  char **environ;
+  char *name;
+  char *pid;
+  int exitcode;
 } tsh_t;
 
 /**
@@ -87,8 +90,8 @@ typedef struct tsh {
  */
 typedef struct builtin
 {
-	char *name;
-	int (*handl)(tsh_t *tsh, command_t *command);
+  char *name;
+  int (*handl)(tsh_t *tsh, command_t *command);
 } builtin_t;
 
 extern char **environ;

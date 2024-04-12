@@ -107,7 +107,7 @@ char *_which(char *const *environ, const char *name)
 int execute(const char *file, char *const *argv, char *const *environ)
 {
   pid_t child_pid = fork();
-  int sys;
+  int sys = 0;
 
   if (child_pid == 0)
   {
@@ -140,7 +140,6 @@ int tsh_execute(tsh_t *tsh, command_t *command)
 {
   int (*builtin_handl)(tsh_t *tsh, command_t *command);
   char *file;
-  int exitcode;
 
   builtin_handl = get_builtin(command->name);
   if (builtin_handl != NULL)

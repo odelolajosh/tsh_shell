@@ -43,8 +43,11 @@ size_t read_command(tsh_t *tsh)
 			i += j + 1;
 			return (j);
 		}
-		else
-			i = len = 0;
+
+		// free as we are done with the buffer - so buffer dont grow unbounded
+		i = len = 0;
+		free(buffer);
+		buffer = NULL;
 	}
 
 	_putchar(TSH_BUF_FLUSH);
@@ -56,7 +59,7 @@ size_t read_command(tsh_t *tsh)
 	rbytes = getline(&buffer, &len, stdin);
 #endif
 
-	if (rbytes == -1) // EOF
+	if (rbytes == (size_t) -1) // EOF
 		return (-1);
 
 	// replace newline with null byte
@@ -95,7 +98,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 		i = len = 0;
 
 	rbytes = read(fileno(stream), buffer, TSH_READ_BUFSIZE);
-	if (rbytes == -1 && (rbytes == 0 && len == 0))
+	if (rbytes == (size_t) -1 && (rbytes == 0 && len == 0))
 		return (-1);
 
 	len = rbytes;
