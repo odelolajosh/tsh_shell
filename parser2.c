@@ -2,7 +2,7 @@
 #include "tsh.h"
 #include "parsers.h"
 #include "strings.h"
-#include "util.h"
+#include "utils.h"
 
 /**
  * parse_command - Parses a command string into a command_t struct.

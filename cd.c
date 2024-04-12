@@ -1,7 +1,6 @@
 #include "tsh.h"
-#include "envs.h"
 #include "strings.h"
-#include "cd.h"
+#include "utils.h"
 
 /**
  * _getcwd - gets the current working directory

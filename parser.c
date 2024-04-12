@@ -2,7 +2,7 @@
 #include "tsh.h"
 #include "parsers.h"
 #include "strings.h"
-#include "util.h"
+#include "utils.h"
 
 /**
  * try_delimiter - tries to identify and return a delimiter character from the given string.

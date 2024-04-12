@@ -1,12 +1,21 @@
-#ifndef _UTIL_H
-#define _UTIL_H
+#ifndef _UTILS_H
+#define _UTILS_H
 
 #include <unistd.h>
 #include <limits.h>
 #include <stdio.h>
-#include "strings.h"
 
+#include "strings.h"
 #include "tsh.h"
+
+/* cd.c */
+char *_getcwd(void);
+char *_getcwdname(void);
+
+/* env.c */
+char *_getenv(char *const *_environ, const char *name);
+char **_setenv(char **_environ, const char *name, const char *value);
+char **_unsetenv(char **_environ, const char *name);
 
 /* realloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
@@ -28,4 +37,4 @@ int _puts(char *str);
 int _eputchar(char c);
 int _eputs(char *str);
 
-#endif
+#endif /* _UTILS_H */

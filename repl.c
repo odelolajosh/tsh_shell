@@ -1,8 +1,6 @@
 #include "tsh.h"
 #include "parsers.h"
-#include "util.h"
-#include "cd.h"
-#include "envs.h"
+#include "utils.h"
 
 /**
  * tsh_repl - Read-Eval-Print-Loop for the shell

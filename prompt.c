@@ -1,6 +1,4 @@
-#include "cd.h"
-#include "util.h"
-
+#include "utils.h"
 
 /**
  * prompt - Display the shell prompt

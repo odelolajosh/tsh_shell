@@ -1,5 +1,5 @@
 #include "tsh.h"
-#include "util.h"
+#include "utils.h"
 
 int _putfd(char c, int fd)
 {

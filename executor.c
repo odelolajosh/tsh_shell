@@ -1,8 +1,7 @@
 #include "tsh.h"
 #include <string.h>
 #include "strings.h"
-#include "envs.h"
-#include "util.h"
+#include "utils.h"
 
 /**
  * is_valid_path - Check if a path is valid

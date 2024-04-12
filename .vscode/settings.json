@@ -11,7 +11,7 @@
     "unistd.h": "c",
     "_string.h": "c",
     "strings.h": "c",
-    "util.h": "c",
+    "utils.h": "c",
     "limits.h": "c"
   }
 }
