@@ -6,14 +6,21 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
-#define TSH_RL_BUFSIZE 1024
+#define TSH_READ_BUFSIZE 1024
+#define TSH_WRITE_BUFSIZE 64
+#define TSH_BUF_FLUSH -1
+
 #define TSH_TOK_BUFSIZE 64
 #define TSH_TOK_DELIM " \t\r\n\a"
 
+// Debug mode (0: off, 1: on)
 #define DEBUG 1
 
+// use tsh implementations for getline and strtok
+#define TSH_IMPL 1
+
 // The exit status of the shell
-#define EXIT_TSH -1
+#define TSH_EXIT -1
 
 /**
  * struct command - command
@@ -65,6 +72,7 @@ typedef struct pipeline {
 typedef struct tsh {
 	char *line;
 	size_t line_size;
+  char sep;
 	char **environ;
 	char *name;
 	char *pid;

@@ -1,6 +1,6 @@
 #include "strings.h"
 #include "util.h"
-#include "env.h"
+#include "envs.h"
 
 /**
  * _envcmp - compares a name with env key

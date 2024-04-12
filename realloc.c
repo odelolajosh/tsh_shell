@@ -1,5 +1,4 @@
 #include "util.h"
-#include "string.h"
 
 /**
  * _realloc - reallocates a memory block.

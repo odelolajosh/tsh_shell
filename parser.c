@@ -1,214 +1,69 @@
 #include <string.h>
 #include "tsh.h"
-#include "parser.h"
+#include "parsers.h"
 #include "strings.h"
 #include "util.h"
 
 /**
- * parse_line - Parse a line into commands and separators
- * @lines: pointer to the head of the line list
- * @seps: pointer to the head of the separator list
- * @line: line to parse
+ * try_delimiter - tries to identify and return a delimiter character from the given string.
+ * Delimiter characters include ';', '||', and '&&'.
+ *
+ * @param s The string to check for a delimiter.
+ * @return The delimiter character found, or -1 if no delimiter is found.
  */
-void parse_line(line_node **lines, sep_node **seps, char *line)
+char try_delimiter(char *s)
 {
-  int start, end;
-  char *token;
+  if (*s == '\0')
+    return '\0';
 
-  // split the line into commands using ';', '||', '&&' as delimiters
-  start = end = 0;
-  while (line[end])
-  {
-    if (line[end] == ';' || (line[end] == '|' && line[end + 1] == '|') || (line[end] == '&' && line[end + 1] == '&'))
-    {
-      token = _substring(line, start, end);
-      *lines = add_line_node_end(*lines, token);
-      *seps = add_sep_node_end(*seps, line[end]);
-      free(token);
+  if (*s == ';')
+    return ';';
 
-      if (line[end] == '|' || line[end] == '&')
-        end += 2;
-      else
-        end += 1;
+  if (*s == '|' && *(s + 1) == '|')
+    return '|';
 
-      start = end;
-    }
-    else
-      end++;
-  }
+  if (*s == '&' && *(s + 1) == '&')
+    return '&';
 
-  // add the last command
-  token = _substring(line, start, end);
-  *lines = add_line_node_end(*lines, token);
-  free(token);
+  return -1;
 }
 
 /**
- * parse_command - Parses a command string into a command_t struct.
- * Parses str into a freshly allocated cmd_struct and returns a pointer to it.
- * The redirects in the returned cmd_struct will be set to -1, ie no redirect.
- * @line: command string to parse
+ * traverse_command - extract command by delimiter
+ * @line: line
+ * @sep: pointer to the separator character
+ * @size: pointer to the size of the command
  *
- * Return: pointer to the command struct
+ * Return: the length of the isolated command
  */
-command_t *parse_command(char *line)
+size_t traverse_command(char *line, char *sep)
 {
-  command_t *command;
+  size_t i = 0;
+  char delimiter;
 
-  command = malloc(sizeof(command_t));
-  if (command == NULL)
+  while ((delimiter = try_delimiter(line + i)) == -1)
+    i++;
+
+  *(line + i) = '\0'; // replace delimiter with null byte
+
+  if (delimiter == '|' || delimiter == '&')
   {
-    write(STDERR_FILENO, ": allocation error\n", 18);
-    exit(EXIT_FAILURE);
+    i++;
+    *(line + i) = '\0';
   }
 
-  command->argv = tsh_split_line(line);
-  if (command->argv == NULL)
-  {
-    free(command);
-    return (NULL);
-  }
-  command->name = _strdup(command->argv[0]);
-  command->redirects[0] = command->redirects[1] = -1;
+  *sep = delimiter;
 
-  command->argc = 0;
-  while (command->argv[command->argc] != NULL)
-    command->argc++;
-
-  return command;
+  return (i);
 }
 
-void free_command(command_t *command)
+int can_traverse_command(tsh_t *tsh)
 {
-  if (command == NULL)
-    return;
-  if (command->name)
-    free(command->name);
-  if (command->argv)
-    free(command->argv);
-  free(command);
-}
+  if (tsh->sep == '|' && tsh->exitcode == 0)
+    return (0);
 
-pipeline_t *parse_pipeline(char *cmd)
-{
-  pipeline_t *pipeline = malloc(sizeof(pipeline_t));
-  int i, n_commands = 0;
-  char *command;
+  if (tsh->sep == '&' && tsh->exitcode != 0)
+    return (0);
 
-  if (pipeline == NULL)
-  {
-    write(STDERR_FILENO, ": allocation error\n", 18);
-    exit(EXIT_FAILURE);
-  }
-
-  for (i = 0; cmd[i]; i++)
-    if (cmd[i] == '|')
-      ++n_commands;
-
-  pipeline->len = ++n_commands;
-  pipeline->commands = malloc(sizeof(command_t *) * (n_commands + 1)); // +1 for NULL
-
-  if (pipeline->commands == NULL)
-  {
-    write(STDERR_FILENO, ": allocation error\n", 18);
-    exit(EXIT_FAILURE);
-  }
-
-  // use strtok to split the pipeline into commands
-  command = strtok(cmd, "|");
-  for (i = 0; command; i++)
-  {
-    pipeline->commands[i] = parse_command(command);
-    command = strtok(NULL, "|");
-  }
-
-  pipeline->commands[i] = NULL;
-
-  return pipeline;
-}
-
-int (*assign_pipes(pipeline_t *pipeline))[2]
-{
-  int n_pipes = pipeline->len - 1, i;
-  int(*pipes)[2] = malloc(sizeof(int) * n_pipes * 2);
-
-  if (pipes == NULL)
-  {
-    write(STDERR_FILENO, ": allocation error\n", 18);
-    exit(EXIT_FAILURE);
-  }
-
-  for (i = 1; i < pipeline->len; i++)
-  {
-    pipe(pipes[i - 1]);
-    pipeline->commands[i - 1]->redirects[STDOUT_FILENO] = pipes[i - 1][1];
-    pipeline->commands[i]->redirects[STDIN_FILENO] = pipes[i - 1][0];
-  }
-
-  return pipes;
-}
-
-void print_command(command_t *command)
-{
-  char **arg;
-  int i;
-
-  if (command == NULL)
-  {
-    fprintf(stderr, "command is NULL\n");
-    return;
-  }
-
-  arg = command->argv;
-  fprintf(stderr, "progname: %s\n", command->name);
-
-  for (i = 0, arg = command->argv; *arg; ++arg, ++i)
-  {
-    fprintf(stderr, "  args[%d]: %s\n", i, *arg);
-  }
-}
-
-void print_pipeline(pipeline_t *pipeline) {}
-
-char *tsh_read_line(void)
-{
-  return NULL;
-}
-
-char **tsh_split_line(char *line)
-{
-  char **argv;
-  char *token;
-  size_t bufsize, i;
-
-  bufsize = TSH_TOK_BUFSIZE;
-  argv = malloc(sizeof(char *) * (bufsize));
-  if (!argv)
-    return (NULL);
-
-  token = _strtok(line, TSH_TOK_DELIM);
-  if (!token)
-  {
-    free(argv);
-    return (NULL);
-  }
-
-  for (i = 0; token; i++)
-  {
-    if (i == bufsize)
-    {
-      bufsize += TSH_TOK_BUFSIZE;
-      argv = _realloc2(argv, sizeof(char *) * i, sizeof(char *) * bufsize);
-      if (argv == NULL)
-      {
-        write(STDERR_FILENO, ": allocation error\n", 18);
-        exit(EXIT_FAILURE);
-      }
-    }
-    argv[i] = _strdup(token);
-    token = _strtok(NULL, TSH_TOK_DELIM);
-  }
-  argv[i] = NULL;
-
-  return (argv);
+  return (1);
 }

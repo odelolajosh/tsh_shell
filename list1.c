@@ -1,14 +1,14 @@
 #include "lists.h"
 
-line_node *add_line_node_end(line_node *head, char *line)
+str_node *add_str_node_end(str_node *head, char *line)
 {
-  line_node *new_node, *current;
+  str_node *new_node, *current;
 
-  new_node = malloc(sizeof(line_node));
+  new_node = malloc(sizeof(str_node));
   if (new_node == NULL)
     return (NULL);
 
-  new_node->line = _strdup(line);
+  new_node->str = _strdup(line);
   new_node->next = NULL;
 
   if (head == NULL)
@@ -22,15 +22,15 @@ line_node *add_line_node_end(line_node *head, char *line)
   return (head);
 }
 
-line_node *free_line_list(line_node *head)
+str_node *free_str_list(str_node *head)
 {
-  line_node *current = head;
-  line_node *next;
+  str_node *current = head;
+  str_node *next;
 
   while (current != NULL)
   {
     next = current->next;
-    free(current->line);
+    free(current->str);
     free(current);
     current = next;
   }
@@ -38,13 +38,13 @@ line_node *free_line_list(line_node *head)
   return (NULL);
 }
 
-void print_line_list(line_node *head)
+void print_str_list(str_node *head)
 {
-  line_node *current = head;
+  str_node *current = head;
 
   while (current != NULL)
   {
-    printf("%s\n", current->line);
+    printf("%s\n", current->str);
     current = current->next;
   }
 }

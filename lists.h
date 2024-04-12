@@ -5,24 +5,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct line_node_s
+typedef struct str_node_s
 {
-  struct line_node_s *next;
-  char *line;
-} line_node;
+  struct str_node_s *next;
+  char *str;
+} str_node;
 
-typedef struct sep_node_s
+typedef struct int_node_s
 {
-  struct sep_node_s *next;
-  char sep;
-} sep_node;
+  struct int_node_s *next;
+  int num;
+} int_node;
 
-line_node *add_line_node_end(line_node *head, char *line);
-line_node *free_line_list(line_node *head);
-void print_line_list(line_node *head);
+str_node *add_str_node_end(str_node *head, char *str);
+str_node *free_str_list(str_node *head);
+void print_str_list(str_node *head);
 
-sep_node *add_sep_node_end(sep_node *head, char sep);
-sep_node *free_sep_list(sep_node *head);
-void print_sep_list(sep_node *head);
+int_node *add_int_node_end(int_node *head, char num);
+int_node *free_int_list(int_node *head);
+void print_int_list(int_node *head, int isChar);
 
 #endif /* _TSH_LISTS_H */

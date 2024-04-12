@@ -6,11 +6,26 @@
 #include <stdio.h>
 #include "strings.h"
 
-#define TSH_RL_BUFSIZE 1024
+#include "tsh.h"
 
+/* realloc.c */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char **_realloc2(char **ptr, unsigned int old_size, unsigned int new_size);
-void assign_lineptr(char **lineptr, size_t *n, char *buffer, size_t count);
+
+/* getline.c */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
+size_t read_command(tsh_t *tsh);
+void sigint_handler(int signal_num);
+
+/* prompt.c */
+void prompt(void);
+
+/* put.c */
+int _putfd(char c, int fd);
+int _putsfd(char *str, int fd);
+int _putchar(char c);
+int _puts(char *str);
+int _eputchar(char c);
+int _eputs(char *str);
 
 #endif

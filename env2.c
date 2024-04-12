@@ -1,7 +1,7 @@
 #include "tsh.h"
 #include "strings.h"
 #include "util.h"
-#include "env.h"
+#include "envs.h"
 
 /**
  * _setenv - modifies or adds an environment variable

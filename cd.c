@@ -1,5 +1,5 @@
 #include "tsh.h"
-#include "env.h"
+#include "envs.h"
 #include "strings.h"
 #include "cd.h"
 
@@ -41,7 +41,7 @@ char *_getcwdname(void)
   if (cwdname == NULL)
     return cwd;
   
-  name = _strdup(cwdname);
+  name = _strdup(cwdname + 1);
   free(cwd);
   return name;
 }
@@ -62,7 +62,11 @@ int tsh_cd(tsh_t *tsh, command_t *command)
     dir = command->argv[1];
 
   if (dir[0] == '-')
+  {
     dir = _getenv(tsh->environ, "OLDPWD");
+    write(STDOUT_FILENO, dir, _strlen(dir));
+    write(STDOUT_FILENO, "\n", 1);
+  }
 
   if (chdir(dir) == -1)
   {

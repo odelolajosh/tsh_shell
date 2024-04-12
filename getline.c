@@ -1,29 +1,72 @@
 #include "util.h"
+#include "strings.h"
+#include "parsers.h"
 
 /**
- * assign_lineptr - assigns values to the lineptr
- *
- * @lineptr: output pointer
- * @n: the maximum number of char to read
- * @buffer: read string
- * @count: number of char actually read
- *
- * Return: pointer to the output string
+ * sigint_handler - handles the SIGINT signal
+ * @signal_num: the signal number
  */
-void assign_lineptr(char **lineptr, size_t *n, char *buffer, size_t count)
+void sigint_handler(__attribute__((unused)) int signal_num)
 {
-	if (*lineptr == NULL || *n < count)
+	_puts("\n");
+	prompt();
+}
+
+/**
+ * read_command - Display the shell prompt and read a line of input
+ * @line: pointer to the line buffer
+ * @len: pointer to the line buffer size
+ *
+ * Return: number of characters read, or -1 on failure
+ */
+size_t read_command(tsh_t *tsh)
+{
+	static char *buffer;	// line buffer
+	static size_t i, len; // i, len are position in and length of the buffer
+	size_t rbytes, j;
+	char sep;
+
+	signal(SIGINT, sigint_handler);
+
+	if (i >= len) // buffer is full consumed, reset
+		i = len = 0;
+
+	if (len)
 	{
-		if (!lineptr)
-			free(lineptr);
-		*lineptr = buffer;
-		*n = count;
+		if (can_traverse_command(tsh))
+		{
+			j = traverse_command(buffer + i, &sep);
+			tsh->line = buffer + i;
+			tsh->line_size = j;
+			tsh->sep = sep;
+
+			i += j + 1;
+			return (j);
+		}
+		else
+			i = len = 0;
 	}
-	else
-	{
-		_strcpy(*lineptr, buffer);
-		free(buffer);
-	}
+
+	_putchar(TSH_BUF_FLUSH);
+	prompt();
+
+#if TSH_IMPL
+	rbytes = _getline(&buffer, &len, stdin);
+#else
+	rbytes = getline(&buffer, &len, stdin);
+#endif
+
+	if (rbytes == -1) // EOF
+		return (-1);
+
+	// replace newline with null byte
+	if (*(buffer + rbytes - 1) == '\n')
+		*(buffer + rbytes - 1) = '\0', rbytes--;
+
+	tsh->line = NULL;
+	tsh->line_size = 0;
+	tsh->sep = '\0';
+	return (rbytes); // No command yet
 }
 
 /**
@@ -39,44 +82,42 @@ void assign_lineptr(char **lineptr, size_t *n, char *buffer, size_t count)
  */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 {
-	static ssize_t count;
-	ssize_t count_cp, bufsize = *n;
-	char *buffer = NULL, ch;
-	int loop, flag;
+	static char buffer[TSH_READ_BUFSIZE];
+	static size_t i, len;
+	char *line, *new_line, *newline;
+	size_t m = 0, rbytes = 0, k;
 
-	if (count == 0)		/* _getline is free */
-		fflush(stream); /* clear stream */
-	else							/* _getline is already in used */
+	line = *lineptr;
+	if (line && n)
+		m = *n;
+
+	if (i == len) // buffer is full consumed, reset
+		i = len = 0;
+
+	rbytes = read(fileno(stream), buffer, TSH_READ_BUFSIZE);
+	if (rbytes == -1 && (rbytes == 0 && len == 0))
 		return (-1);
 
-	if (*n == 0) /* use default BUFSIZE */
-		bufsize = *n = TSH_RL_BUFSIZE;
+	len = rbytes;
 
-	loop = 1, count = 0;
-	buffer = malloc(sizeof(char) * bufsize);
-	if (!buffer)
-		return (-1);
+	newline = _strchr(buffer + i, '\n');
+	k = newline ? 1 + (unsigned int)(newline - buffer) : len;
 
-	while (loop)
-	{
-		flag = read(STDIN_FILENO, &ch, 1);
-		if (flag == 0) /* EOF */
-		{
-			free(buffer), count = 0; /* so _getline can be used again */
-			return (-1);
-		}
-		if (ch == '\n') /* is newline? */
-			break;
-		if (count >= bufsize) /* more than bufsize? */
-			if (_realloc(buffer, count, count + 1) == NULL)
-			{
-				free(buffer);
-				return (-1);
-			}
-		buffer[count++] = ch;
-	}
-	buffer[count] = '\0';
-	assign_lineptr(lineptr, n, buffer, count);
-	count_cp = count, count = 0; /* so _getline can be used again */
-	return (count_cp);
+	new_line = _realloc(line, m, m + k + 1);
+	if (!new_line)
+		return (line ? free(line), -1 : -1);
+
+	if (len)
+		_strncat(new_line, buffer + i, k - i);
+	else
+		_strncpy(new_line, buffer + i, k - i);
+
+	m += k - i;
+	i = k;
+	line = new_line;
+
+	if (m)
+		*n = m;
+	*lineptr = line;
+	return (m);
 }

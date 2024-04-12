@@ -1,14 +1,14 @@
 #include "lists.h"
 
-sep_node *add_sep_node_end(sep_node *head, char sep)
+int_node *add_int_node_end(int_node *head, char num)
 {
-  sep_node *new_node, *current;
+  int_node *new_node, *current;
 
-  new_node = malloc(sizeof(sep_node));
+  new_node = malloc(sizeof(int_node));
   if (new_node == NULL)
     return (NULL);
 
-  new_node->sep = sep;
+  new_node->num = num;
   new_node->next = NULL;
 
   if (head == NULL)
@@ -22,10 +22,10 @@ sep_node *add_sep_node_end(sep_node *head, char sep)
   return (head);
 }
 
-sep_node *free_sep_list(sep_node *head)
+int_node *free_int_list(int_node *head)
 {
-  sep_node *current = head;
-  sep_node *next;
+  int_node *current = head;
+  int_node *next;
 
   while (current != NULL)
   {
@@ -37,13 +37,16 @@ sep_node *free_sep_list(sep_node *head)
   return (NULL);
 }
 
-void print_sep_list(sep_node *head)
+void print_int_list(int_node *head, int isChar)
 {
-  sep_node *current = head;
+  int_node *current = head;
 
   while (current != NULL)
   {
-    printf("%c\n", current->sep);
+    if (isChar)
+      printf("%c\n", current->num);
+    else
+      printf("%d\n", current->num);
     current = current->next;
   }
 }

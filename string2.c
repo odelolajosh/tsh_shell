@@ -27,13 +27,12 @@ int _strncmp(const char *s1, const char *s2, size_t n)
 char *_strcpy(char *dest, char *src)
 {
 
-	size_t a;
+	size_t i;
 
-	for (a = 0; src[a] != '\0'; a++)
-	{
-		dest[a] = src[a];
-	}
-	dest[a] = '\0';
+	for (i = 0; src[i] != '\0'; i++)
+		dest[i] = src[i];
+	
+	dest[i] = '\0';
 
 	return (dest);
 }

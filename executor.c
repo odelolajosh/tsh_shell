@@ -1,7 +1,8 @@
 #include "tsh.h"
 #include <string.h>
 #include "strings.h"
-#include "env.h"
+#include "envs.h"
+#include "util.h"
 
 /**
  * is_valid_path - Check if a path is valid
@@ -24,13 +25,13 @@ int is_valid_path(const char *path)
       else if (path[i + 1] == '.' && path[i + 2] == '/')
         i += 2;
       else
-        return 0;
+        return (0);
     }
 
     i++;
   }
 
-  return 1;
+  return (1);
 }
 
 /**
@@ -43,7 +44,7 @@ int is_executable(const char *path)
   struct stat sb; // stat buffer
 
   if (is_valid_path(path) == 0)
-    return 0;
+    return (0);
 
   return (stat(path, &sb) == 0 && sb.st_mode & S_IXUSR);
 }
@@ -65,7 +66,11 @@ char *_which(char *const *environ, const char *name)
     return NULL;
 
   paths = _strdup(PATH);
+#if TSH_IMPL
+  path = _strtok(paths, ":");
+#else
   path = strtok(paths, ":");
+#endif
   while (path)
   {
     xpath = malloc(strlen(path) + strlen(name) + 2);
@@ -84,7 +89,11 @@ char *_which(char *const *environ, const char *name)
     }
 
     free(xpath);
+#if TSH_IMPL
+    path = _strtok(NULL, ":");
+#else
     path = strtok(NULL, ":");
+#endif
   }
 
   free(paths);
@@ -107,8 +116,8 @@ int execute(const char *file, char *const *argv, char *const *environ)
   }
   else if (child_pid < 0)
   {
-    write(STDERR_FILENO, "omooo\n", 10);
-    return -1;
+    _eputs("tsh: omooo\n");
+    return (-1);
   }
   else
   {
@@ -136,16 +145,17 @@ int tsh_execute(tsh_t *tsh, command_t *command)
 
   builtin_handl = get_builtin(command->name);
   if (builtin_handl != NULL)
-    return builtin_handl(tsh, command);
-
-  file = _which(tsh->environ, command->name);
-  if (file)
+    tsh->exitcode = builtin_handl(tsh, command);
+  else if ((file = _which(tsh->environ, command->name)))
   {
-    exitcode = execute(file, command->argv, tsh->environ);
+    tsh->exitcode = execute(file, command->argv, tsh->environ);
     free(file);
-    return (exitcode);
+  }
+  else
+  {
+    _eputs("tsh: command not found\n");
+    tsh->exitcode = 127;
   }
 
-  write(STDERR_FILENO, "tsh: command not found\n", 24);
-  return (127);
+  return (tsh->exitcode);
 }

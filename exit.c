@@ -18,8 +18,8 @@ int tsh_exit(tsh_t *tsh, command_t *command)
     status = _atoi(command->argv[1]);
     tsh->exitcode = status;
 
-    return (EXIT_TSH);
+    return (TSH_EXIT);
   }
 
-  return (EXIT_TSH);
+  return (TSH_EXIT);
 }
