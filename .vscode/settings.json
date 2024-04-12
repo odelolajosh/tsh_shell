@@ -12,6 +12,7 @@
     "_string.h": "c",
     "strings.h": "c",
     "utils.h": "c",
-    "limits.h": "c"
+    "limits.h": "c",
+    "stdio.h": "c"
   }
 }

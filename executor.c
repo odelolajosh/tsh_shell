@@ -132,21 +132,20 @@ int execute(const char *file, char *const *argv, char *const *environ)
 /**
  * tsh_execute - Execute a command
  * @tsh: tsh shell data
- * @command: command to execute
  *
  * Return: 0 on success, -1 on failure
  */
-int tsh_execute(tsh_t *tsh, command_t *command)
+int tsh_execute(tsh_t *tsh)
 {
-  int (*builtin_handl)(tsh_t *tsh, command_t *command);
+  int (*builtin_handl)(tsh_t *tsh);
   char *file;
 
-  builtin_handl = get_builtin(command->name);
+  builtin_handl = get_builtin(tsh->command->name);
   if (builtin_handl != NULL)
-    tsh->exitcode = builtin_handl(tsh, command);
-  else if ((file = _which(tsh->environ, command->name)))
+    tsh->exitcode = builtin_handl(tsh);
+  else if ((file = _which(tsh->environ, tsh->command->name)))
   {
-    tsh->exitcode = execute(file, command->argv, tsh->environ);
+    tsh->exitcode = execute(file, tsh->command->argv, tsh->environ);
     free(file);
   }
   else

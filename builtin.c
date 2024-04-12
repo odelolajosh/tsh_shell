@@ -1,7 +1,7 @@
 #include "tsh.h"
 #include "strings.h"
 
-int (*get_builtin(const char *name))(tsh_t *, command_t *)
+int (*get_builtin(const char *name))(tsh_t *)
 {
   builtin_t builtins[] = {
 		{ "exit", tsh_exit },

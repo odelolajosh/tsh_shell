@@ -47,18 +47,17 @@ char *_getcwdname(void)
 
 /**
  * tsh_cd - changes the current working directory
- *
  * @tsh: shell data
  *
  * Return: 0 if successful otherwise 1
  */
-int tsh_cd(tsh_t *tsh, command_t *command)
+int tsh_cd(tsh_t *tsh)
 {
   char *dir = _getenv(tsh->environ, "HOME");
   char *oldpwd = _getenv(tsh->environ, "PWD");
 
-  if (command->argc > 1)
-    dir = command->argv[1];
+  if (tsh->command->argc > 1)
+    dir = tsh->command->argv[1];
 
   if (dir[0] == '-')
   {
@@ -87,9 +86,8 @@ int tsh_cd(tsh_t *tsh, command_t *command)
  *
  * Return: 0 if successful otherwise 1
  */
-int tsh_pwd(tsh_t *tsh, command_t *command)
+int tsh_pwd(tsh_t *tsh)
 {
-  (void)command;
   char *dir = _getenv(tsh->environ, "PWD");
 
   if (dir == NULL)

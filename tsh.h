@@ -75,6 +75,7 @@ typedef struct tsh
 {
   char *line;
   size_t line_size;
+  command_t *command;
   char sep;
   char **environ;
   char *name;
@@ -91,7 +92,7 @@ typedef struct tsh
 typedef struct builtin
 {
   char *name;
-  int (*handl)(tsh_t *tsh, command_t *command);
+  int (*handl)(tsh_t *tsh);
 } builtin_t;
 
 extern char **environ;
@@ -99,17 +100,16 @@ extern char **environ;
 int tsh_create(tsh_t *, char **);
 int tsh_destroy(tsh_t *);
 void tsh_repl(tsh_t *);
-char *tsh_read_line(void);
 char **tsh_split_line(char *);
-int tsh_execute(tsh_t *tsh, command_t *);
+int tsh_execute(tsh_t *tsh);
 
 // Builtins
-int (*get_builtin(const char *name))(tsh_t *, command_t *);
-int tsh_exit(tsh_t *, command_t *);
-int tsh_cd(tsh_t *, command_t *);
-int tsh_pwd(tsh_t *, command_t *);
-int tsh_env(tsh_t *, command_t *);
-int tsh_setenv(tsh_t *, command_t *);
-int tsh_unsetenv(tsh_t *, command_t *);
+int (*get_builtin(const char *name))(tsh_t *);
+int tsh_exit(tsh_t *);
+int tsh_cd(tsh_t *);
+int tsh_pwd(tsh_t *);
+int tsh_env(tsh_t *);
+int tsh_setenv(tsh_t *);
+int tsh_unsetenv(tsh_t *);
 
 #endif /* TSH_H */

@@ -1,21 +1,28 @@
 #include "tsh.h"
 #include "strings.h"
+#include "utils.h"
 
-int tsh_exit(tsh_t *tsh, command_t *command)
+/**
+ * tsh_exit - exits the shell
+ * @tsh: shell data
+ *
+ * Return: TSH_EXIT if successful otherwise 2
+ */
+int tsh_exit(tsh_t *tsh)
 {
   int status = 0;
 
-  if (command->argv[1] != NULL)
+  if (tsh->command->argv[1] != NULL)
   {
-    if (!_isdigit(command->argv[1]))
+    if (!_isdigit(tsh->command->argv[1]))
     {
-      write(STDERR_FILENO, "exit: Illegal number: ", 22);
-      write(STDERR_FILENO, command->argv[1], _strlen(command->argv[1]));
-      write(STDERR_FILENO, "\n", 1);
-      
+      _eputs("exit: Illegal number: ");
+      _eputs(tsh->command->argv[1]);
+      _eputchar('\n');
+
       return (2);
     }
-    status = _atoi(command->argv[1]);
+    status = _atoi(tsh->command->argv[1]);
     tsh->exitcode = status;
 
     return (TSH_EXIT);

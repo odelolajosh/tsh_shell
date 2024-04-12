@@ -11,16 +11,15 @@ void tsh_repl(tsh_t *tsh)
 {
   while (read_command(tsh) != (size_t) -1)
   {
-    command_t *command;
 
     if (tsh->line_size)
     {
-      command = parse_command(tsh->line);
-      if (command == NULL)
-        break;
+      tsh->command = parse_command(tsh->line);
+      if (tsh->command == NULL)
+        continue;
 
-      tsh_execute(tsh, command);
-      free_command(command);
+      tsh_execute(tsh);
+      free_command(tsh->command);
     }
 
     if (tsh->exitcode == TSH_EXIT)
