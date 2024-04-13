@@ -99,11 +99,14 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 	if (i == len) // buffer is full consumed, reset
 		i = len = 0;
 
-	rbytes = read(fileno(stream), buffer, TSH_READ_BUFSIZE);
-	if (rbytes == (size_t)-1 && (rbytes == 0 && len == 0))
-		return (-1);
+	if (len == 0) // buffer is empty, read from stream
+	{
+		rbytes = read(fileno(stream), buffer, TSH_READ_BUFSIZE);
+		if (rbytes == (size_t)-1 || rbytes == 0) // Error or EOF
+			return (-1);
 
-	len = rbytes;
+		len = rbytes;
+	}
 
 	newline = _strchr(buffer + i, '\n');
 	k = newline ? 1 + (unsigned int)(newline - buffer) : len;
