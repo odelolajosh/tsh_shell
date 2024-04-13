@@ -13,24 +13,7 @@
  */
 int is_valid_path(const char *path)
 {
-  int i = 0;
-
-  while (path[i] != '\0')
-  {
-    if (path[i] == '.')
-    {
-      if (path[i + 1] == '/')
-        i++;
-      else if (path[i + 1] == '.' && path[i + 2] == '/')
-        i += 2;
-      else
-        return (0);
-    }
-
-    i++;
-  }
-
-  return (1);
+  return (_strchr((char *)path, '/') != NULL);
 }
 
 /**
@@ -56,7 +39,7 @@ int is_executable(const char *path)
 char *_which(char *const *environ, const char *name)
 {
   char *PATH = _getenv(environ, "PATH");
-  char *paths, *path, *xpath;
+  char *paths, *path, *x;
 
   if (is_executable(name))
     return _strdup(name);
@@ -65,29 +48,36 @@ char *_which(char *const *environ, const char *name)
     return NULL;
 
   paths = _strdup(PATH);
+  if (paths == NULL)
+    return (NULL);
+
 #if TSH_IMPL
   path = _strtok(paths, ":");
 #else
   path = strtok(paths, ":");
 #endif
+
   while (path)
   {
-    xpath = malloc(strlen(path) + strlen(name) + 2);
-    if (xpath == NULL)
-      return NULL;
-
-    xpath = _strdup(path);
-    xpath = _strcat(xpath, "/");
-    xpath = _strcat(xpath, name);
-    xpath = _strcat(xpath, "\0");
-
-    if (is_executable(xpath))
+    x = malloc(_strlen(path) + _strlen(name) + 2);
+    if (x == NULL)
     {
       free(paths);
-      return (xpath);
+      return (NULL);
     }
 
-    free(xpath);
+    _strcpy(x, path);
+    _strcat(x, "/");
+    _strcat(x, name);
+    _strcat(x, "\0");
+
+    if (is_executable(x))
+    {
+      free(paths);
+      return (x);
+    }
+
+    free(x);
 #if TSH_IMPL
     path = _strtok(NULL, ":");
 #else
@@ -112,6 +102,7 @@ int execute(const char *file, char *const *argv, char *const *environ)
   if (child_pid == 0)
   {
     execve(file, argv, environ);
+    perror("tsh: execve");
   }
   else if (child_pid < 0)
   {
@@ -126,7 +117,7 @@ int execute(const char *file, char *const *argv, char *const *environ)
     } while (!WIFEXITED(sys) && !WIFSIGNALED(sys));
   }
 
-  return (sys / 256);
+  return WEXITSTATUS(sys);
 }
 
 /**
