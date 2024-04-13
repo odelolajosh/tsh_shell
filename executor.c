@@ -142,17 +142,17 @@ int tsh_execute(tsh_t *tsh)
 
   builtin_handl = get_builtin(tsh->command->name);
   if (builtin_handl != NULL)
-    tsh->exitcode = builtin_handl(tsh);
+    tsh->status = builtin_handl(tsh);
   else if ((file = _which(tsh->environ, tsh->command->name)))
   {
-    tsh->exitcode = execute(file, tsh->command->argv, tsh->environ);
+    tsh->status = execute(file, tsh->command->argv, tsh->environ);
     free(file);
   }
   else
   {
     _eputs("tsh: command not found\n");
-    tsh->exitcode = 127;
+    tsh->status = 127;
   }
 
-  return (tsh->exitcode);
+  return (tsh->status);
 }

@@ -10,7 +10,7 @@ void prompt(void)
 
   _puts(cwd);
   _puts(prompt_str);
-  _putchar(TSH_BUF_FLUSH);
+  _putc(TSH_BUF_FLUSH);
 
   free(cwd);
 }

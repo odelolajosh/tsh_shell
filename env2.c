@@ -18,7 +18,7 @@ int tsh_env(tsh_t *tsh)
   for (i = 0; tsh->environ[i]; i++)
   {
     _puts(tsh->environ[i]);
-    _putchar('\n');
+    _putc('\n');
   }
 
   return (0);

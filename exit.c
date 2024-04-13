@@ -18,12 +18,12 @@ int tsh_exit(tsh_t *tsh)
     {
       _eputs("exit: Illegal number: ");
       _eputs(tsh->command->argv[1]);
-      _eputchar('\n');
+      _eputc('\n');
 
       return (2);
     }
     status = _atoi(tsh->command->argv[1]);
-    tsh->exitcode = status;
+    tsh->status = status;
 
     return (TSH_EXIT);
   }

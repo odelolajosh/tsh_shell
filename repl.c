@@ -22,7 +22,9 @@ void tsh_repl(tsh_t *tsh)
       free_command(tsh->command);
     }
 
-    if (tsh->exitcode == TSH_EXIT)
+    if (tsh->status == TSH_EXIT)
       break;
   }
+
+  exit(tsh->status == TSH_EXIT ? 0 : tsh->status);
 }

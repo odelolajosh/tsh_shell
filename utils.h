@@ -30,11 +30,15 @@ void sigint_handler(int signal_num);
 void prompt(void);
 
 /* put.c */
-int _putfd(char c, int fd);
+int _putcfd(char c, int fd);
 int _putsfd(char *str, int fd);
-int _putchar(char c);
+int _putc(char c);
 int _puts(char *str);
-int _eputchar(char c);
+int _eputc(char c);
 int _eputs(char *str);
+
+/* util.c */
+int interactive(tsh_t *tsh);
+FILE *openfileorexit(const char *path, const char *progname);
 
 #endif /* _UTILS_H */

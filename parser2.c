@@ -79,12 +79,12 @@ void print_command(command_t *command)
   for (i = 0, arg = command->argv; *arg; ++arg, ++i)
   {
     _eputs("  args[");
-    _eputchar(i + '0');
+    _eputc(i + '0');
     _eputs("]: ");
     _eputs(*arg);
     _eputs("\n");
   }
-  _putchar(TSH_BUF_FLUSH);
+  _putc(TSH_BUF_FLUSH);
 }
 
 char **tsh_split_line(char *line)

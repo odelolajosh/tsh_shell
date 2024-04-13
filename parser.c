@@ -59,10 +59,10 @@ size_t traverse_command(char *line, char *sep)
 
 int can_traverse_command(tsh_t *tsh)
 {
-  if (tsh->sep == '|' && tsh->exitcode == 0)
+  if (tsh->sep == '|' && tsh->status == 0)
     return (0);
 
-  if (tsh->sep == '&' && tsh->exitcode != 0)
+  if (tsh->sep == '&' && tsh->status != 0)
     return (0);
 
   return (1);
