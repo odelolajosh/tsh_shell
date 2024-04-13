@@ -8,6 +8,10 @@
 #include "strings.h"
 #include "tsh.h"
 
+/* read_command flags */
+#define RC_NOFLUSH 0
+#define RC_FLUSH 1
+
 /* cd.c */
 char *_getcwd(void);
 char *_getcwdname(void);
@@ -23,7 +27,7 @@ char **_realloc2(char **ptr, unsigned int old_size, unsigned int new_size);
 
 /* getline.c */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
-size_t read_command(tsh_t *tsh);
+size_t read_command(tsh_t *tsh, int flush);
 void sigint_handler(int signal_num);
 
 /* prompt.c */

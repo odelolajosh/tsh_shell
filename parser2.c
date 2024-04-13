@@ -30,6 +30,13 @@ command_t *parse_command(char *line)
     return (NULL);
   }
   command->name = _strdup(command->argv[0]);
+  if (command->name == NULL)
+  {
+    free(command->argv);
+    free(command);
+    return (NULL);
+  }
+
   command->redirects[0] = command->redirects[1] = -1;
 
   command->argc = 0;
@@ -46,12 +53,21 @@ command_t *parse_command(char *line)
  */
 void free_command(command_t *command)
 {
+  int i = 0;
+
   if (command == NULL)
     return;
   if (command->name)
     free(command->name);
   if (command->argv)
+  {
+    while (command->argv[i])
+    {
+      free(command->argv[i]);
+      i++;
+    }
     free(command->argv);
+  }
   free(command);
 }
 
@@ -119,10 +135,15 @@ char **tsh_split_line(char *line)
       if (argv == NULL)
       {
         write(STDERR_FILENO, ": allocation error\n", 18);
-        exit(EXIT_FAILURE);
+        return (NULL);
       }
     }
     argv[i] = _strdup(token);
+    if (argv[i] == NULL)
+    {
+      write(STDERR_FILENO, ": allocation error\n", 18);
+      return (NULL);
+    }
 
 #if TSH_IMPL
     token = _strtok(NULL, TSH_TOK_DELIM);

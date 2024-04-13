@@ -11,9 +11,8 @@ void tsh_repl(tsh_t *tsh)
 {
   int status;
 
-  while (read_command(tsh) != (size_t)-1)
+  while (read_command(tsh, RC_NOFLUSH) != (size_t)-1)
   {
-
     if (tsh->line_size)
     {
       tsh->command = parse_command(tsh->line);
@@ -28,5 +27,6 @@ void tsh_repl(tsh_t *tsh)
       break;
   }
 
+  read_command(tsh, RC_FLUSH);
   exit(tsh->status);
 }

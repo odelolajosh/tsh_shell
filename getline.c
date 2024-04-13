@@ -15,16 +15,25 @@ void sigint_handler(__attribute__((unused)) int signal_num)
 /**
  * read_command - Display the shell prompt and read a line of input
  * @line: pointer to the line buffer
- * @len: pointer to the line buffer size
+ * @flush: a flag to flush the buffer
  *
  * Return: number of characters read, or -1 on failure
  */
-size_t read_command(tsh_t *tsh)
+size_t read_command(tsh_t *tsh, int flush)
 {
 	static char *buffer;	// line buffer
 	static size_t i, len; // i, len are position in and length of the buffer
 	size_t rbytes, j;
 	char sep;
+
+	if (flush == RC_FLUSH) // flush the buffer
+	{
+		if (buffer)
+			free(buffer);
+		buffer = NULL;
+		i = len = 0;
+		return (0);
+	}
 
 	signal(SIGINT, sigint_handler);
 
