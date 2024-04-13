@@ -9,7 +9,7 @@
  */
 void tsh_repl(tsh_t *tsh)
 {
-  while (read_command(tsh) != (size_t) -1)
+  while (read_command(tsh) != (size_t)-1)
   {
 
     if (tsh->line_size)
