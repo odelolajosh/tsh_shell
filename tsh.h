@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
 
 #define TSH_READ_BUFSIZE 1024
 #define TSH_WRITE_BUFSIZE 64
@@ -80,7 +82,8 @@ typedef struct tsh
   char **environ;
   char *name;
   char *pid;
-  int exitcode;
+  int status;
+  FILE *fp;
 } tsh_t;
 
 /**
@@ -97,8 +100,10 @@ typedef struct builtin
 
 extern char **environ;
 
-int tsh_create(tsh_t *, char **);
+/** lifecycle.c */
+int tsh_create(tsh_t *tsh, int argc, char **argv);
 int tsh_destroy(tsh_t *);
+
 void tsh_repl(tsh_t *);
 char **tsh_split_line(char *);
 int tsh_execute(tsh_t *tsh);

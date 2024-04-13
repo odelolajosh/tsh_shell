@@ -50,16 +50,18 @@ size_t read_command(tsh_t *tsh)
 		buffer = NULL;
 	}
 
-	_putchar(TSH_BUF_FLUSH);
-	prompt();
+	_putc(TSH_BUF_FLUSH);
+
+	if (interactive(tsh))
+		prompt();
 
 #if TSH_IMPL
-	rbytes = _getline(&buffer, &len, stdin);
+	rbytes = _getline(&buffer, &len, tsh->fp);
 #else
-	rbytes = getline(&buffer, &len, stdin);
+	rbytes = getline(&buffer, &len, tsh->fp);
 #endif
 
-	if (rbytes == (size_t) -1) // EOF
+	if (rbytes == (size_t)-1) // EOF
 		return (-1);
 
 	// replace newline with null byte
@@ -98,7 +100,7 @@ ssize_t _getline(char **lineptr, size_t *n, FILE *stream)
 		i = len = 0;
 
 	rbytes = read(fileno(stream), buffer, TSH_READ_BUFSIZE);
-	if (rbytes == (size_t) -1 && (rbytes == 0 && len == 0))
+	if (rbytes == (size_t)-1 && (rbytes == 0 && len == 0))
 		return (-1);
 
 	len = rbytes;

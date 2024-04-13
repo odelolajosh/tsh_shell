@@ -6,7 +6,7 @@ int main(int argc, char **argv)
   tsh_t tsh;
 
   // Load config files, if any
-  tsh_create(&tsh, argv);
+  tsh_create(&tsh, argc, argv);
 
   // Run command loop
   tsh_repl(&tsh);

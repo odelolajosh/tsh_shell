@@ -1,7 +1,7 @@
 #include "tsh.h"
 #include "utils.h"
 
-int _putfd(char c, int fd)
+int _putcfd(char c, int fd)
 {
 	static int i;
 	static char buf[TSH_WRITE_BUFSIZE];
@@ -33,14 +33,14 @@ int _putsfd(char *str, int fd)
 	int i = 0;
 
 	while (*str)
-		i += _putfd(*str++, fd);
+		i += _putcfd(*str++, fd);
 
 	return (i);
 }
 
-int _putchar(char c)
+int _putc(char c)
 {
-	return (_putfd(c, STDOUT_FILENO));
+	return (_putcfd(c, STDOUT_FILENO));
 }
 
 int _puts(char *str)
@@ -48,9 +48,9 @@ int _puts(char *str)
 	return (_putsfd(str, STDOUT_FILENO));
 }
 
-int _eputchar(char c)
+int _eputc(char c)
 {
-	return (_putfd(c, STDERR_FILENO));
+	return (_putcfd(c, STDERR_FILENO));
 }
 
 int _eputs(char *str)
