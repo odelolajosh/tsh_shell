@@ -1,5 +1,6 @@
 #include "parsers.h"
 #include "strings.h"
+#include <string.h>
 
 pipeline_t *parse_pipeline(char *cmd)
 {
