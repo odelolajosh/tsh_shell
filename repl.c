@@ -9,6 +9,8 @@
  */
 void tsh_repl(tsh_t *tsh)
 {
+  int status;
+
   while (read_command(tsh) != (size_t)-1)
   {
 
@@ -18,13 +20,13 @@ void tsh_repl(tsh_t *tsh)
       if (tsh->command == NULL)
         continue;
 
-      tsh_execute(tsh);
+      status = tsh_execute(tsh);
       free_command(tsh->command);
     }
 
-    if (tsh->status == TSH_EXIT)
+    if (status == TSH_EXIT)
       break;
   }
 
-  exit(tsh->status == TSH_EXIT ? 0 : tsh->status);
+  exit(tsh->status);
 }
