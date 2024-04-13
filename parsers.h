@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef PARSERS_H
+#define PARSERS_H
 
 #include "tsh.h"
 
@@ -13,8 +13,4 @@ command_t *parse_command(char *cmd);
 void print_command(command_t *command);
 void free_command(command_t *command);
 
-/* parser3.c */
-pipeline_t *parse_pipeline(char *cmd);
-void print_pipeline(pipeline_t *pipeline);
-
-#endif /* PARSER_H */
+#endif /* PARSERS_H */
