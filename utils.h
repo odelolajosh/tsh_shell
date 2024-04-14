@@ -27,8 +27,11 @@ char **_realloc2(char **ptr, unsigned int old_size, unsigned int new_size);
 
 /* getline.c */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
-size_t read_command(tsh_t *tsh, int flush);
+
+/* input.c */
 void sigint_handler(int signal_num);
+size_t input(tsh_t *tsh);
+void flush_input(void);
 
 /* prompt.c */
 void prompt(void);
