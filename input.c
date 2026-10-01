@@ -1,6 +1,7 @@
+#include <signal.h>
 #include "utils.h"
-#include "strings.h"
-#include "parsers.h"
+#include "tsh_strings.h"
+#include "parser.h"
 
 /**
  * sigint_handler - handles the SIGINT signal

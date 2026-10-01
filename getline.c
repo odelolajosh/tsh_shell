@@ -1,6 +1,5 @@
 #include "utils.h"
-#include "strings.h"
-#include "parsers.h"
+#include "tsh_strings.h"
 
 /**
  * _getline - reads an entire line from stream, store the

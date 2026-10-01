@@ -7,12 +7,12 @@
     "_ct_rune_t.h": "c",
     "tsh.h": "c",
     "string.h": "c",
-    "parsers.h": "c",
     "unistd.h": "c",
     "_string.h": "c",
-    "strings.h": "c",
     "utils.h": "c",
     "limits.h": "c",
-    "stdio.h": "c"
+    "stdio.h": "c",
+    "tsh_strings.h": "c",
+    "parser.h": "c"
   }
 }

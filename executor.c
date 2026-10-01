@@ -1,6 +1,7 @@
-#include "tsh.h"
 #include <string.h>
-#include "strings.h"
+#include <sys/wait.h>
+#include "tsh.h"
+#include "tsh_strings.h"
 #include "utils.h"
 
 /**

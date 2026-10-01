@@ -1,29 +1,21 @@
-#ifndef _UTILS_H
-#define _UTILS_H
+#ifndef TSH_UTILS_H
+#define TSH_UTILS_H
 
 #include <unistd.h>
 #include <limits.h>
 #include <stdio.h>
 
-#include "strings.h"
+#include "tsh_strings.h"
 #include "tsh.h"
 
 /* read_command flags */
 #define RC_NOFLUSH 0
 #define RC_FLUSH 1
 
-/* cd.c */
-char *_getcwd(void);
-char *_getcwdname(void);
-
 /* env.c */
 char *_getenv(char *const *_environ, const char *name);
 char **_setenv(char **_environ, const char *name, const char *value);
 char **_unsetenv(char **_environ, const char *name);
-
-/* realloc.c */
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
-char **_realloc2(char **ptr, unsigned int old_size, unsigned int new_size);
 
 /* getline.c */
 ssize_t _getline(char **lineptr, size_t *n, FILE *stream);
@@ -47,5 +39,7 @@ int _eputs(char *str);
 /* util.c */
 int interactive(tsh_t *tsh);
 FILE *openfileorexit(const char *path, const char *progname);
+char *_getcwd(void);
+char *_getcwdname(void);
 
-#endif /* _UTILS_H */
+#endif /* TSH_UTILS_H */

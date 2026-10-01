@@ -100,15 +100,17 @@ typedef struct builtin
 
 extern char **environ;
 
-/** lifecycle.c */
+/* lifecycle.c */
 int tsh_create(tsh_t *tsh, int argc, char **argv);
 int tsh_destroy(tsh_t *);
 
+/* repl.c */
 void tsh_repl(tsh_t *);
-char **tsh_split_line(char *);
+
+/* executor.c */
 int tsh_execute(tsh_t *tsh);
 
-// Builtins
+/* builtins.c */
 int (*get_builtin(const char *name))(tsh_t *);
 int tsh_exit(tsh_t *);
 int tsh_cd(tsh_t *);
